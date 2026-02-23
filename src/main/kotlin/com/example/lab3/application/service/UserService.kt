@@ -1,0 +1,34 @@
+package com.example.lab3.application.service
+
+import com.example.lab3.domain.model.User
+import com.example.lab3.domain.port.UserRepositoryPort
+import com.example.lab3.application.exception.NotFoundByIdException
+import org.springframework.stereotype.Service
+
+@Service
+class UserService(
+    private val userRepository: UserRepositoryPort
+) {
+    fun create(user: User): User = userRepository.create(user)
+
+    fun getById(id: Long): User =
+        userRepository.findById(id) ?: throw NotFoundByIdException("User", id)
+
+    fun update(id: Long, updatedUser: User): User {
+        val existingUser = userRepository.findById(id) ?: throw NotFoundByIdException("User", id)
+        val userToSave = existingUser.copy(
+            email = updatedUser.email,
+            firstName = updatedUser.firstName,
+            lastName = updatedUser.lastName,
+            isActive = updatedUser.isActive
+        )
+        return userRepository.update(userToSave)
+    }
+
+    fun delete(id: Long) {
+        val existingUser = userRepository.findById(id) ?: throw NotFoundByIdException("User", id)
+        userRepository.delete(existingUser.id)
+    }
+
+    fun getAll(): List<User> = userRepository.findAll()
+}
