@@ -4,9 +4,11 @@ import com.example.lab3.adapter.persistence.jpa.entity.DishEntity
 import com.example.lab3.adapter.persistence.jpa.repository.DishJpaRepository
 import com.example.lab3.domain.model.Dish
 import com.example.lab3.domain.port.DishRepositoryPort
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Repository
 
 @Repository
+@Profile("jpa")
 class DishJpaAdapter(
     private val dishJpaRepository: DishJpaRepository
 ) : DishRepositoryPort {

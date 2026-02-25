@@ -4,9 +4,11 @@ import com.example.lab3.adapter.persistence.jpa.entity.UserEntity
 import com.example.lab3.adapter.persistence.jpa.repository.UserJpaRepository
 import com.example.lab3.domain.model.User
 import com.example.lab3.domain.port.UserRepositoryPort
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Repository
 
 @Repository
+@Profile("jpa")
 class UserJpaAdapter(
     private val userJpaRepository: UserJpaRepository
 ) : UserRepositoryPort {

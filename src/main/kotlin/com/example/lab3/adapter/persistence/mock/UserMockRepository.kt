@@ -3,9 +3,11 @@ package com.example.lab3.adapter.persistence.mock
 import com.example.lab3.application.exception.*
 import com.example.lab3.domain.model.User
 import com.example.lab3.domain.port.UserRepositoryPort
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Repository
 
 @Repository
+@Profile("mock")
 class UserMockRepository : UserRepositoryPort {
     private val usersStorage = mutableMapOf<Long,User>()
     private var idCounter = 1L
