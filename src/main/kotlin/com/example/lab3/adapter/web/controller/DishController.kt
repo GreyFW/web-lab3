@@ -34,6 +34,12 @@ class DishController (
     ): List<DishResponse> = dishService.getAll(namePart)
                                         .map { DishMapper.toResponse(it) }
 
+    @GetMapping("/{id}")
+    fun getById(@PathVariable id: Long): DishResponse {
+        val dish = dishService.getById(id)
+        return DishMapper.toResponse(dish)
+    }
+
     @PutMapping("/{id}")
     fun update(
         @PathVariable id: Long,
