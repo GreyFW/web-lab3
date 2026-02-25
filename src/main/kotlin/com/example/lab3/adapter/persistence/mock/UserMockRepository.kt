@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 @Profile("mock")
-class UserMockRepository : UserRepositoryPort {
+open class UserMockRepository : UserRepositoryPort {
     private val usersStorage = mutableMapOf<Long,User>()
     private var idCounter = 1L
 

@@ -7,7 +7,7 @@ import com.example.lab3.application.exception.NotFoundByIdException
 import org.springframework.stereotype.Service
 
 @Service
-class UserService(
+open class UserService(
     private val userRepository: UserRepositoryPort
 ) {
     fun create(user: User): CreateUserResult {

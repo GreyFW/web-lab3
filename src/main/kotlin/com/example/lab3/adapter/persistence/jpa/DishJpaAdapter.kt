@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 @Profile("jpa")
-class DishJpaAdapter(
+open class DishJpaAdapter(
     private val dishJpaRepository: DishJpaRepository
 ) : DishRepositoryPort {
 

@@ -7,7 +7,7 @@ import com.example.lab3.application.exception.NotFoundByIdException
 import org.springframework.stereotype.Service
 
 @Service
-class DishService(
+open class DishService(
     private val dishRepository: DishRepositoryPort
 ) {
     fun create(dish: Dish): CreateDishResult {

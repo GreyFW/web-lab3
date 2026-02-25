@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 @Profile("jpa")
-class UserJpaAdapter(
+open class UserJpaAdapter(
     private val userJpaRepository: UserJpaRepository
 ) : UserRepositoryPort {
     override fun create(user: User): User = userJpaRepository.save(UserEntity.fromDomain(user)).toDomain()
