@@ -1,0 +1,24 @@
+info:
+  name: PUT - DISH - update
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: "{{base_url}}/api/v1/dishes/2"
+  body:
+    type: json
+    data: |
+      {
+        "name": "Ice Cream",
+        "description": "Buddy everyone loves ice cream come on, buy it",
+        "price": 23.40,
+        "isAvailable": false
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

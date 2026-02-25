@@ -1,0 +1,24 @@
+info:
+  name: POST - DISH - create
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{base_url}}/api/v1/dishes"
+  body:
+    type: json
+    data: |
+      {
+        "name": "Ice Cream",
+        "description": "Buddy everyone loves ice cream come on, buy it",
+        "price": 19,
+        "isAvailable": true
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
