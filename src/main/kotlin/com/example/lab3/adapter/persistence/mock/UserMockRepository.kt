@@ -1,7 +1,6 @@
 package com.example.lab3.adapter.persistence.mock
 
-import com.example.lab3.application.exception.NotFoundByIdException
-import com.example.lab3.application.exception.AlreadyExistsException
+import com.example.lab3.application.exception.*
 import com.example.lab3.domain.model.User
 import com.example.lab3.domain.port.UserRepositoryPort
 import org.springframework.stereotype.Repository
@@ -15,11 +14,11 @@ class UserMockRepository : UserRepositoryPort {
         val existingUser = usersStorage.values.find { it.email == user.email }
         if (existingUser != null ) {
             throw AlreadyExistsException("User", "email", user.email)
-            ("User with email=${user.email} already exists")
         }
         val id = idCounter++
         val newUser = user.copy(id = id)
         usersStorage[id] = newUser
+
         return newUser
     }
 
@@ -31,8 +30,13 @@ class UserMockRepository : UserRepositoryPort {
         return usersStorage.values.toList()
     }
 
+    override fun findByEmail(email: String): User? {
+        return usersStorage.values.find { it.email == email }
+    }
+
     override fun update(user: User): User {
-        val existingUser = usersStorage[user.id] ?: throw NotFoundByIdException("User", user.id)
+        val id = user.id ?: throw IdCantBeNullException("User")
+        val existingUser = usersStorage[id] ?: throw NotFoundByIdException("User", id)
 
         val updatedUser = existingUser.copy(
             email = user.email,
@@ -40,8 +44,8 @@ class UserMockRepository : UserRepositoryPort {
             lastName = user.lastName,
             isActive = user.isActive
         )
+        usersStorage[id] = updatedUser
 
-        usersStorage[user.id] = updatedUser
         return updatedUser
     }
 

@@ -1,7 +1,7 @@
-package com.example.lab3.domain.model
+package com.example.lab3.adapter.web.dto.user
 
-data class User (
-    val id: Long?,
+data class UserResponse(
+    val id: Long,
     val email: String,
     val firstName: String,
     val lastName: String,
