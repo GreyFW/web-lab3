@@ -1,18 +1,20 @@
 package com.example.lab3.adapter.web
 
-import com.example.lab3.application.exception.NotFoundByIdException
 import com.example.lab3.application.exception.AlreadyExistsException
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+import com.example.lab3.application.exception.NotFoundByIdException
 import com.example.lab3.adapter.web.dto.ErrorResponse
-import jakarta.servlet.http.HttpServletRequest
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatusCode
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
-
+import org.springframework.web.context.request.WebRequest
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
 @RestControllerAdvice
-class GlobalExceptionHandler {
+class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(NotFoundByIdException::class)
     fun handleNotFound(ex: NotFoundByIdException): ResponseEntity<ErrorResponse> {
@@ -34,15 +36,18 @@ class GlobalExceptionHandler {
         return ResponseEntity(error, HttpStatus.BAD_REQUEST)
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handleValidation(ex: MethodArgumentNotValidException, request: HttpServletRequest): ResponseEntity<ErrorResponse> {
+    override fun handleMethodArgumentNotValid(
+        ex: MethodArgumentNotValidException,
+        headers: HttpHeaders,
+        status: HttpStatusCode,
+        request: WebRequest
+    ): ResponseEntity<Any> {
         val msg = ex.bindingResult.fieldErrors.joinToString("; ") { "${it.field} ${it.defaultMessage}" }
         val error = ErrorResponse(
-            status = 400,
-            error = "Bad Request",
+            status = HttpStatus.BAD_REQUEST.value(),
+            error = HttpStatus.BAD_REQUEST.reasonPhrase,
             message = msg
         )
-        return ResponseEntity(error, HttpStatus.BAD_REQUEST)
+        return ResponseEntity(error, headers, HttpStatus.BAD_REQUEST)
     }
-
 }
