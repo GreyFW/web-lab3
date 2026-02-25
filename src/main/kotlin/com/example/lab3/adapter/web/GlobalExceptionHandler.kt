@@ -20,8 +20,8 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(NotFoundByIdException::class)
     fun handleNotFound(ex: NotFoundByIdException): ResponseEntity<ErrorResponse> {
         val error = ErrorResponse(
-            status = 404,
-            error = "Not Found",
+            status = HttpStatus.NOT_FOUND.value(),
+            error = HttpStatus.NOT_FOUND.reasonPhrase,
             message = ex.message ?: "Resource not found"
         )
         return ResponseEntity(error, HttpStatus.NOT_FOUND)
@@ -30,22 +30,23 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(AlreadyExistsException::class)
     fun handleAlreadyExists(ex: AlreadyExistsException): ResponseEntity<ErrorResponse> {
         val error = ErrorResponse(
-            status = 400,
-            error = "Bad Request",
+            status = HttpStatus.BAD_REQUEST.value(),
+            error = HttpStatus.BAD_REQUEST.reasonPhrase,
             message = ex.message ?: "Already exists"
         )
         return ResponseEntity(error, HttpStatus.BAD_REQUEST)
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException::class)
-    fun handleHttpMessageNotReadable(
+    override fun handleHttpMessageNotReadable(
         ex: HttpMessageNotReadableException,
+        headers: HttpHeaders,
+        status: HttpStatusCode,
         request: WebRequest
-    ): ResponseEntity<ErrorResponse> {
+    ): ResponseEntity<Any> {
         val error = ErrorResponse(
             status = HttpStatus.BAD_REQUEST.value(),
             error = HttpStatus.BAD_REQUEST.reasonPhrase,
-            message = ex.mostSpecificCause.message ?: "Failed to read request"
+            message = ex.mostSpecificCause?.message ?: "Failed to read request"
         )
         return ResponseEntity(error, HttpStatus.BAD_REQUEST)
     }
@@ -56,12 +57,14 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         status: HttpStatusCode,
         request: WebRequest
     ): ResponseEntity<Any> {
-        val msg = ex.bindingResult.fieldErrors.joinToString("; ") { "${it.field} ${it.defaultMessage}" }
+        val msg = ex.bindingResult.fieldErrors.joinToString("; ") {
+            "${it.field} ${it.defaultMessage}"
+        }
         val error = ErrorResponse(
             status = HttpStatus.BAD_REQUEST.value(),
             error = HttpStatus.BAD_REQUEST.reasonPhrase,
             message = msg
         )
-        return ResponseEntity(error, headers, HttpStatus.BAD_REQUEST)
+        return ResponseEntity(error, HttpStatus.BAD_REQUEST)
     }
 }
