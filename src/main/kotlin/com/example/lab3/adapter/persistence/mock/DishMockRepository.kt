@@ -36,6 +36,10 @@ class DishMockRepository : DishRepositoryPort {
             .toList()
     }
 
+    override fun findByName(name: String): Dish? {
+        return dishesStorage.values.find { it.name.equals(name, ignoreCase = true) }
+    }
+
     override fun update(dish: Dish): Dish {
         val id = dish.id ?: throw IdCantBeNullException("Dish")
         val existingDish = dishesStorage[id] ?: throw NotFoundByIdException("Dish", id)
