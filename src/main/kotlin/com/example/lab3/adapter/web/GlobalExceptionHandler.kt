@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -32,6 +33,19 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
             status = 400,
             error = "Bad Request",
             message = ex.message ?: "Already exists"
+        )
+        return ResponseEntity(error, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun handleHttpMessageNotReadable(
+        ex: HttpMessageNotReadableException,
+        request: WebRequest
+    ): ResponseEntity<ErrorResponse> {
+        val error = ErrorResponse(
+            status = HttpStatus.BAD_REQUEST.value(),
+            error = HttpStatus.BAD_REQUEST.reasonPhrase,
+            message = ex.mostSpecificCause.message ?: "Failed to read request"
         )
         return ResponseEntity(error, HttpStatus.BAD_REQUEST)
     }
