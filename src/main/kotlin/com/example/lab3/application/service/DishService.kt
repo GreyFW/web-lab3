@@ -28,7 +28,7 @@ class DishService(
 
     fun delete(id: Long) {
         val existingDish = dishRepository.findById(id) ?: throw NotFoundByIdException("Dish", id)
-        dishRepository.delete(existingDish.id)
+        dishRepository.delete(id)
     }
 
     fun getAll(namePart: String? = null): List<Dish> =
